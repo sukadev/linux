@@ -10,3 +10,8 @@ GenuineIntel-6-37,V10,Silvermont_core.json,core
 GenuineIntel-6-4D,V10,Silvermont_core.json,core
 GenuineIntel-6-4C,V10,Silvermont_core.json,core
 GenuineIntel-6-5C,V6,Goldmont_core.json,core
+GenuineIntel-6-1C,V1,Bonnell_core.json,core
+GenuineIntel-6-26,V1,Bonnell_core.json,core
+GenuineIntel-6-27,V1,Bonnell_core.json,core
+GenuineIntel-6-36,V1,Bonnell_core.json,core
+GenuineIntel-6-35,V1,Bonnell_core.json,core
