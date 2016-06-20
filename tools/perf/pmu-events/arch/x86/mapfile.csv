@@ -19,3 +19,6 @@ GenuineIntel-6-2A,V12,SandyBridge_core.json,core
 GenuineIntel-6-2D,V18,Jaketown_core.json,core
 GenuineIntel-6-3A,V15,IvyBridge_core.json,core
 GenuineIntel-6-3E,V17,IvyTown_core.json,core
+GenuineIntel-6-3C,V21,Haswell_core.json,core
+GenuineIntel-6-45,V21,Haswell_core.json,core
+GenuineIntel-6-46,V21,Haswell_core.json,core
