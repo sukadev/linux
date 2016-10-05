@@ -25,3 +25,6 @@ GenuineIntel-6-4E,V24,Skylake,core
 GenuineIntel-6-5E,V24,Skylake,core
 GenuineIntel-6-8E,V24,Skylake,core
 GenuineIntel-6-9E,V24,Skylake,core
+GenuineIntel-6-37,V13,Silvermont,core
+GenuineIntel-6-4D,V13,Silvermont,core
+GenuineIntel-6-4C,V13,Silvermont,core
