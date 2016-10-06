@@ -49,6 +49,7 @@ struct perf_pmu_alias {
 	double scale;
 	bool per_pkg;
 	bool snapshot;
+	bool json;
 };
 
 struct perf_pmu *perf_pmu__find(const char *name);
@@ -75,7 +76,7 @@ int perf_pmu__format_parse(char *dir, struct list_head *head);
 struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
 
 void print_pmu_events(const char *event_glob, bool name_only, bool quiet,
-		      bool long_desc);
+		      bool long_desc, bool json_only);
 bool pmu_have_event(const char *pname, const char *name);
 
 int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,

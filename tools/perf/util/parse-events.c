@@ -2275,7 +2275,7 @@ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
 
 	print_hwcache_events(event_glob, name_only);
 
-	print_pmu_events(event_glob, name_only, quiet_flag, long_desc);
+	print_pmu_events(event_glob, name_only, quiet_flag, long_desc, false);
 
 	if (event_glob != NULL)
 		return;
