@@ -482,4 +482,19 @@ static inline void decode_pswid(u32 pswid, int *vasid, int *winid)
 	if (winid)
 		*winid = pswid & 0xFFFF;
 }
+
+#ifdef vas_debug
+
+static void print_fifo_msg_count(struct vas_window *txwin)
+{
+	uint64_t read_hvwc_reg(struct vas_window *w, char *n, uint64_t o);
+	pr_devel("Winid %d, Msg count %llu\n", txwin->winid,
+			(uint64_t)read_hvwc_reg(txwin, VREG(LRFIFO_PUSH)));
+}
+#else	/* vas_debug */
+
+#define print_fifo_msg_count(window)
+
+#endif	/* vas_debug */
+
 #endif /* _VAS_H */
