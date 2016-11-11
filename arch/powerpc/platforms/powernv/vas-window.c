@@ -14,6 +14,7 @@
 #include <linux/log2.h>
 
 #include "vas.h"
+#include "copy-paste.h"
 
 static int fault_winid;
 
@@ -900,6 +901,57 @@ put_rxwin:
 
 }
 EXPORT_SYMBOL_GPL(vas_tx_win_open);
+
+int vas_copy_crb(void *crb, int offset, bool first)
+{
+	if (!vas_initialized())
+		return -1;
+
+	return vas_copy(crb, offset, first);
+}
+EXPORT_SYMBOL_GPL(vas_copy_crb);
+
+#define RMA_LSMP_REPORT_ENABLE PPC_BIT(53)
+int vas_paste_crb(struct vas_window *txwin, int offset, bool last, bool re)
+{
+	int rc;
+	uint64_t val;
+	void *addr;
+
+	if (!vas_initialized())
+		return -1;
+	/*
+	 * Only NX windows are supported for now and hardware assumes
+	 * report-enable flag is set for NX windows. Ensure software
+	 * complies too.
+	 */
+	WARN_ON_ONCE(!re);
+
+	addr = txwin->paste_kaddr;
+	if (re) {
+		/*
+		 * Set the REPORT_ENABLE bit (equivalent to writing
+		 * to 1K offset of the paste address)
+		 */
+		val = SET_FIELD(RMA_LSMP_REPORT_ENABLE, 0ULL, 1);
+		addr += val;
+	}
+
+	/*
+	 * Map the raw CR value from vas_paste() to an error code (there
+	 * is just pass or fail for now though).
+	 */
+	rc = vas_paste(addr, offset, last);
+	if (rc == 0x20000000)
+		rc = 0;
+	else
+		rc = -EINVAL;
+
+	print_fifo_msg_count(txwin);
+
+	return rc;
+}
+EXPORT_SYMBOL_GPL(vas_paste_crb);
 
 static void poll_window_busy_state(struct vas_window *window)
 {

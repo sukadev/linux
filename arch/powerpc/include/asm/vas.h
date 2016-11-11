@@ -125,4 +125,17 @@ struct vas_window *vas_tx_win_open(int vasid, enum vas_cop_type cop,
  */
 int vas_win_close(struct vas_window *win);
 
+/*
+ * Copy the co-processor request block (CRB) @crb into the local L2 cache.
+ * For now, @offset must be 0 and @first must be true.
+ */
+extern int vas_copy_crb(void *crb, int offset, bool first);
+
+/*
+ * Paste a previously copied CRB (see vas_copy_crb()) from the L2 cache to
+ * the hardware address associated with the window @win. For now, @off must
+ * 0 and @last must be true. @re is expected/assumed to be true for NX windows.
+ */
+extern int vas_paste_crb(struct vas_window *win, int off, bool last, bool re);
+
 #endif /* _MISC_VAS_H */
