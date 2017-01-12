@@ -291,14 +291,17 @@ enum vas_notify_after_count {
  */
 struct vas_instance {
 	int vas_id;
+	bool ready;
 	struct ida ida;
+	struct list_head node;
+	struct platform_device *pdev;
 
 	u64 hvwc_bar_start;
 	u64 hvwc_bar_len;
 	u64 uwc_bar_start;
 	u64 uwc_bar_len;
-	u64 win_base_addr;
-	u64 win_id_shift;
+	u64 paste_base_addr;
+	u64 paste_win_id_shift;
 
 	struct mutex mutex;
 	struct vas_window *rxwin[VAS_COP_TYPE_MAX];
@@ -375,5 +378,8 @@ struct vas_winctx {
 	enum vas_notify_scope max_scope;
 	enum vas_notify_after_count notify_after_count;
 };
+
+extern bool vas_initialized(void);
+extern struct vas_instance *find_vas_instance(int vasid);
 
 #endif /* _VAS_H */
