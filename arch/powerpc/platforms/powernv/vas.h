@@ -382,4 +382,7 @@ struct vas_winctx {
 	enum vas_notify_after_count notify_after_count;
 };
 
+extern bool vas_initialized(void);
+extern struct vas_instance *find_vas_instance(int vasid);
+
 #endif /* _VAS_H */
