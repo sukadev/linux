@@ -22,4 +22,12 @@
 #define VAS_THRESH_FIFO_GT_QTR_FULL	2
 #define VAS_THRESH_FIFO_GT_EIGHTH_FULL	3
 
+/*
+ * Get/Set bit fields
+ */
+#define GET_FIELD(m, v)		(((v) & (m)) >> MASK_LSH(m))
+#define MASK_LSH(m)		(__builtin_ffsl(m) - 1)
+#define SET_FIELD(m, v, val)	\
+		(((v) & ~(m)) | ((((typeof(v))(val)) << MASK_LSH(m)) & (m)))
+
 #endif /* _UAPI_MISC_VAS_H */
