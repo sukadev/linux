@@ -76,4 +76,11 @@ extern void vas_init_rx_win_attr(struct vas_rx_win_attr *rxattr,
 extern struct vas_window *vas_rx_win_open(int vasid, enum vas_cop_type cop,
 			struct vas_rx_win_attr *attr);
 
+/*
+ * Close the send or receive window identified by @win. For receive windows
+ * return -EAGAIN if there are active send windows attached to this receive
+ * window.
+ */
+int vas_win_close(struct vas_window *win);
+
 #endif /* _MISC_VAS_H */
