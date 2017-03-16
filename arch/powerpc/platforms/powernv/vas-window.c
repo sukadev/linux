@@ -56,6 +56,30 @@ static inline void get_uwc_mmio_bar(struct vas_window *window,
 	*len = VAS_UWC_SIZE;
 }
 
+/*
+ * Unlike MMIO regions (map_mmio_region() below), paste region must be mapped
+ * cache-able.
+ */
+static void *map_paste_region(char *name, uint64_t start, int len)
+{
+	void *map;
+
+	if (!request_mem_region(start, len, name)) {
+		pr_devel("%s(): request_mem_region(0x%llx, %d) failed\n",
+				__func__, start, len);
+		return NULL;
+	}
+
+	map = __ioremap(start, len, pgprot_val(pgprot_cached(__pgprot(0))));
+	if (!map) {
+		pr_devel("%s(): ioremap(0x%llx, %d) failed\n", __func__, start,
+				len);
+		return NULL;
+	}
+
+	return map;
+}
+
 static void *map_mmio_region(char *name, uint64_t start, int len)
 {
 	void *map;
@@ -717,6 +741,165 @@ release_winid:
 	return ERR_PTR(rc);
 }
 EXPORT_SYMBOL_GPL(vas_rx_win_open);
+
+void vas_init_tx_win_attr(struct vas_tx_win_attr *txattr, enum vas_cop_type cop)
+{
+	memset(txattr, 0, sizeof(*txattr));
+
+	if (cop == VAS_COP_TYPE_842 || cop == VAS_COP_TYPE_842_HIPRI) {
+		txattr->rej_no_credit = false;
+		txattr->rx_wcred_mode = true;
+		txattr->tx_wcred_mode = true;
+		txattr->rx_win_ord_mode = true;
+		txattr->tx_win_ord_mode = true;
+	}
+}
+EXPORT_SYMBOL_GPL(vas_init_tx_win_attr);
+
+static void init_winctx_for_txwin(struct vas_window *txwin,
+			struct vas_tx_win_attr *txattr,
+			struct vas_winctx *winctx)
+{
+	/*
+	 * We first zero all fields and only set non-zero ones. Following
+	 * are some fields set to 0/false for the stated reason:
+	 *
+	 *	->notify_os_intr_reg	In powerNV, send intrs to HV
+	 *	->rsvd_txbuf_count	Not supported yet.
+	 *	->notify_disable	False for NX windows
+	 *	->xtra_write		False for NX windows
+	 *	->notify_early		NA for NX windows
+	 *	->lnotify_lpid		NA for Tx windows
+	 *	->lnotify_pid		NA for Tx windows
+	 *	->lnotify_tid		NA for Tx windows
+	 *	->tx_win_cred_mode	Ignore for now for NX windows
+	 *	->rx_win_cred_mode	Ignore for now for NX windows
+	 */
+	memset(winctx, 0, sizeof(struct vas_winctx));
+
+	winctx->wcreds_max = txattr->wcreds_max ?: VAS_WCREDS_DEFAULT;
+
+	winctx->user_win = txattr->user_win;
+	winctx->nx_win = txwin->rxwin->nx_win;
+	winctx->pin_win = txattr->pin_win;
+
+	winctx->rx_wcred_mode = txattr->rx_wcred_mode;
+	winctx->tx_wcred_mode = txattr->tx_wcred_mode;
+	winctx->rx_word_mode = txattr->rx_win_ord_mode;
+	winctx->tx_word_mode = txattr->tx_win_ord_mode;
+
+	if (winctx->nx_win) {
+		winctx->data_stamp = true;
+		winctx->intr_disable = true;
+	}
+
+	winctx->lpid = txattr->lpid;
+	winctx->pidr = txattr->pidr;
+	winctx->rx_win_id = txwin->rxwin->winid;
+	winctx->fault_win_id = fault_winid;
+
+	winctx->dma_type = VAS_DMA_TYPE_INJECT;
+	winctx->tc_mode = txattr->tc_mode;
+	winctx->min_scope = VAS_SCOPE_LOCAL;
+	winctx->max_scope = VAS_SCOPE_VECTORED_GROUP;
+}
+
+static bool tx_win_args_valid(enum vas_cop_type cop,
+			struct vas_tx_win_attr *attr)
+{
+	if (attr->tc_mode != VAS_THRESH_DISABLED)
+		return false;
+
+	if (cop > VAS_COP_TYPE_MAX)
+		return false;
+
+	if (attr->user_win) {
+		if (cop != VAS_COP_TYPE_GZIP && cop != VAS_COP_TYPE_GZIP_HIPRI)
+			return false;
+
+		if (attr->rsvd_txbuf_count != 0)
+			return false;
+	}
+
+	return true;
+}
+
+struct vas_window *vas_tx_win_open(int vasid, enum vas_cop_type cop,
+			struct vas_tx_win_attr *attr)
+{
+	int rc, winid;
+	struct vas_instance *vinst;
+	struct vas_window *txwin;
+	struct vas_window *rxwin;
+	struct vas_winctx winctx;
+	int size;
+	char *name;
+	uint64_t paste_busaddr;
+
+	if (!vas_initialized())
+		return ERR_PTR(-EAGAIN);
+
+	if (!tx_win_args_valid(cop, attr))
+		return ERR_PTR(-EINVAL);
+
+	vinst = find_vas_instance(vasid);
+	if (!vinst) {
+		pr_devel("VAS: vasid %d not found!\n", vasid);
+		return ERR_PTR(-EINVAL);
+	}
+
+	rxwin = get_vinstance_rxwin(vinst, cop);
+	if (!rxwin) {
+		pr_devel("VAS: No RxWin for vasid %d, cop %d\n", vasid, cop);
+		return ERR_PTR(-EINVAL);
+	}
+
+	rc = -EAGAIN;
+	winid = vas_assign_window_id(&vinst->ida);
+	if (winid < 0)
+		goto put_rxwin;
+
+	rc = -ENOMEM;
+	txwin = vas_window_alloc(vinst, winid);
+	if (!txwin)
+		goto release_winid;
+
+	txwin->tx_win = 1;
+	txwin->rxwin = rxwin;
+	txwin->nx_win = txwin->rxwin->nx_win;
+	txwin->pid = attr->pid;
+
+	init_winctx_for_txwin(txwin, attr, &winctx);
+
+	init_winctx_regs(txwin, &winctx);
+
+	name = kasprintf(GFP_KERNEL, "window-v%d-w%d", vasid, winid);
+	if (!name)
+		goto release_winid;
+
+	txwin->paste_addr_name = name;
+	compute_paste_address(txwin, &paste_busaddr, &size);
+
+	txwin->paste_kaddr = map_paste_region(name, paste_busaddr, size);
+	if (!txwin->paste_kaddr)
+		goto free_name;
+
+	pr_devel("VAS: mapped paste addr 0x%llx to kaddr 0x%p\n",
+				paste_busaddr, txwin->paste_kaddr);
+	return txwin;
+
+free_name:
+	kfree(txwin->paste_addr_name);
+
+release_winid:
+	vas_release_window_id(&vinst->ida, txwin->winid);
+
+put_rxwin:
+	put_rx_win(rxwin);
+	return ERR_PTR(rc);
+
+}
+EXPORT_SYMBOL_GPL(vas_tx_win_open);
 
 static void poll_window_busy_state(struct vas_window *window)
 {
