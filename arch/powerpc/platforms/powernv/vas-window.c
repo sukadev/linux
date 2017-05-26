@@ -575,3 +575,12 @@ int vas_win_close(struct vas_window *window)
 {
 	return -1;
 }
+
+/*
+ * Return a system-wide unique window id for the window @win.
+ */
+uint32_t vas_win_id(struct vas_window *win)
+{
+	return encode_pswid(win->vinst->vas_id, win->winid);
+}
+EXPORT_SYMBOL_GPL(vas_win_id);
