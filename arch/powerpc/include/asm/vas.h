@@ -10,6 +10,8 @@
 #ifndef _MISC_VAS_H
 #define _MISC_VAS_H
 
+struct vas_window;
+
 /*
  * Min and max FIFO sizes are based on Version 1.05 Section 3.1.4.25
  * (Local FIFO Size Register) of the VAS workbook.
@@ -157,4 +159,9 @@ extern int vas_copy_crb(void *crb, int offset);
  */
 extern int vas_paste_crb(struct vas_window *win, int offset, bool re);
 
+/*
+ * Return the power bus paste address associated with @win so the caller
+ * can map that address into their address space.
+ */
+extern uint64_t vas_win_paste_addr(struct vas_window *win);
 #endif /* _MISC_VAS_H */
