@@ -1132,6 +1132,10 @@ static inline void restore_sprs(struct thread_struct *old_thread,
 			mtspr(SPRN_TAR, new_thread->tar);
 	}
 #endif
+#ifdef CONFIG_PPC_VAS
+	if (old_thread->tidr != new_thread->tidr)
+		mtspr(SPRN_TIDR, new_thread->tidr);
+#endif
 }
 
 #ifdef CONFIG_PPC_BOOK3S_64
@@ -1446,9 +1450,97 @@ void flush_thread(void)
 #endif /* CONFIG_HAVE_HW_BREAKPOINT */
 }
 
+#ifdef CONFIG_PPC_VAS
+static DEFINE_SPINLOCK(vas_thread_id_lock);
+static DEFINE_IDA(vas_thread_ida);
+
+/*
+ * We need to assign an unique thread id to each thread in a process. This
+ * thread id is intended to be used with the Fast Thread-wakeup (aka Core-
+ * to-core wakeup) mechanism being implemented on top of Virtual Accelerator
+ * Switchboard (VAS).
+ *
+ * To get a unique thread-id per process we could simply use task_pid_nr()
+ * but the problem is that task_pid_nr() is not yet available for the thread
+ * when copy_thread() is called. Fixing that would require changing more
+ * intrusive arch-neutral code in code path in copy_process()?.
+ *
+ * Further, to assign unique thread ids within each process, we need an
+ * atomic field (or an IDR) in task_struct, which again intrudes into the
+ * arch-neutral code.
+ *
+ * So try to assign globally unique thraed ids for now.
+ *
+ * NOTE: TIDR 0 indicates that the thread does not need a TIDR value.
+ * 	 For now, only threads that expect to be notified by the VAS
+ * 	 hardware need a TIDR value and we assign values > 0 for those.
+ */
+#define MAX_THREAD_CONTEXT	((1 << 15) - 2)
+static int assign_thread_tidr(void)
+{
+	int index;
+	int err;
+
+again:
+	if (!ida_pre_get(&vas_thread_ida, GFP_KERNEL))
+		return -ENOMEM;
+
+	spin_lock(&vas_thread_id_lock);
+	err = ida_get_new_above(&vas_thread_ida, 1, &index);
+	spin_unlock(&vas_thread_id_lock);
+
+	if (err == -EAGAIN)
+		goto again;
+	else if (err)
+		return err;
+
+	if (index > MAX_THREAD_CONTEXT) {
+		spin_lock(&vas_thread_id_lock);
+		ida_remove(&vas_thread_ida, index);
+		spin_unlock(&vas_thread_id_lock);
+		return -ENOMEM;
+	}
+
+	return index;
+}
+
+static void free_thread_tidr(int id)
+{
+	spin_lock(&vas_thread_id_lock);
+	ida_remove(&vas_thread_ida, id);
+	spin_unlock(&vas_thread_id_lock);
+}
+
+void clear_thread_tidr(struct task_struct *t)
+{
+	if (t->thread.tidr) {
+		free_thread_tidr(t->thread.tidr);
+		t->thread.tidr = 0;
+		mtspr(SPRN_TIDR, 0);
+	}
+}
+
+/*
+ * Assign an unique thread id for this thread and set it in the
+ * thread structure. For now, we need this interface only for
+ * the current task.
+ */
+void set_thread_tidr(struct task_struct *t)
+{
+	WARN_ON(t != current);
+	t->thread.tidr = assign_thread_tidr();
+	mtspr(SPRN_TIDR, t->thread.tidr);
+}
+
+#endif /* CONFIG_PPC_VAS */
+
+
 void
 release_thread(struct task_struct *t)
 {
+#ifdef CONFIG_PPC_VAS
+	clear_thread_tidr(t);
+#endif
 }
 
 /*
@@ -1473,6 +1565,8 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
 	*dst = *src;
 
 	clear_task_ebb(dst);
+
+	dst->thread.tidr = 0;
 
 	return 0;
 }
@@ -1584,6 +1678,9 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
 #endif
 
 	setup_ksp_vsid(p, sp);
+#ifdef CONFIG_PPC_VAS
+	p->thread.tidr = 0;
+#endif
 
 #ifdef CONFIG_PPC64 
 	if (cpu_has_feature(CPU_FTR_DSCR)) {

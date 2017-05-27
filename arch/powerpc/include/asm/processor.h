@@ -232,6 +232,10 @@ struct debug_reg {
 struct thread_struct {
 	unsigned long	ksp;		/* Kernel stack pointer */
 
+#ifdef CONFIG_PPC_VAS
+	unsigned long	tidr;
+#endif
+
 #ifdef CONFIG_PPC64
 	unsigned long	ksp_vsid;
 #endif
