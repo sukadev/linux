@@ -4244,6 +4244,14 @@ L:	linux-i2c@vger.kernel.org
 S:	Maintained
 F:	drivers/i2c/busses/i2c-diolan-u2c.c
 
+FAST THREAD-WAKEUP DRIVER
+M:	Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+L:	linuxppc-dev@lists.ozlabs.org
+S:	Maintained
+F:	drivers/misc/ftw/
+F:	include/uapi/misc/ftw.h
+F:	Documentation/powerpc/ftw-api.txt
+
 FILESYSTEM DIRECT ACCESS (DAX)
 M:	Matthew Wilcox <mawilcox@microsoft.com>
 M:	Ross Zwisler <ross.zwisler@linux.intel.com>
