@@ -44,3 +44,19 @@ config PPC_VAS
 	  VAS adapters are found in POWER9 based systems.
 
 	  If unsure, say N.
+
+config PPC_FTW
+	bool "IBM Fast Thread-Wakeup (FTW)"
+	depends on PPC_VAS
+	default n
+	help
+	  This enables support for IBM Fast Thread-Wakeup driver.
+
+	  The FTW driver allows applications to utilize a low overhead
+	  core-to-core wake up mechansim in the IBM Virtual Accelerator
+	  Switchboard (VAS) to improve performance.
+
+	  VAS adapters are found in POWER9 based systems and are required
+	  for the FTW driver to be operational.
+
+	  If unsure, say N.
