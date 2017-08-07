@@ -200,6 +200,16 @@ config CRYPTO_PCRYPT
 config CRYPTO_WORKQUEUE
        tristate
 
+config CRYPTO_COMP_SELFTEST
+       tristate "Compression Self-Testing module"
+       help
+         Configurable Compression Self-Testing using debugfs interface.
+         This allows you to compress and decompress buffers of variable
+         offsets, lengths, and data, using different compressors.  Also
+         the average bytes per second rate for compression/decompression
+         can be calculated.
+
+
 config CRYPTO_CRYPTD
 	tristate "Software async crypto daemon"
 	select CRYPTO_BLKCIPHER
