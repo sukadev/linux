@@ -1153,6 +1153,74 @@ static inline bool tm_abort_check(struct pt_regs *regs, int reason)
 }
 #endif
 
+static DEFINE_MUTEX(paste_emulation_mutex);
+
+static inline int paste(void *i)
+{
+	int cr;
+	long retval = 0;
+
+	/* Need per core lock to ensure trig1/2 writes don't race */
+	mutex_lock(&paste_emulation_mutex);
+
+	hard_irq_disable();
+
+	mtspr(SPRN_TRIG1, 0); /* data doesn't matter */
+	mtspr(SPRN_TRIG1, 0); /* HW says do this twice */
+	asm volatile(
+		"1: " PPC_PASTE(0, %2) "\n"
+		"2: mfcr %1\n"
+		".section .fixup,\"ax\"\n"
+		"3:	li %0,%3\n"
+		"	li %2,0\n"
+		"	b 2b\n"
+		".previous\n"
+		EX_TABLE(1b, 3b)
+		: "=r" (retval), "=r" (cr)
+		: "b" (i), "i" (-EFAULT), "0" (retval));
+	mtspr(SPRN_TRIG2, 0);
+
+	local_irq_enable();
+
+	mutex_unlock(&paste_emulation_mutex);
+
+	return retval ? retval : cr;
+}
+
+static int emulate_paste(struct pt_regs *regs, u32 instword)
+{
+	const void __user *addr;
+	unsigned long ea;
+	u8 ra, rb;
+	int rc;
+
+	if (!cpu_has_feature(CPU_FTR_ARCH_300))
+		return -EINVAL;
+
+	ra = (instword >> 16) & 0x1f;
+	rb = (instword >> 11) & 0x1f;
+
+	ea = regs->gpr[rb] + (ra ? regs->gpr[ra] : 0ul);
+	if (is_32bit_task())
+		ea &= 0xfffffffful;
+	addr = (__force const void __user *)ea;
+
+	if (!access_ok(VERIFY_WRITE, addr, 128)) // cacheline size == 128
+		return -EFAULT;
+
+	pagefault_disable();
+
+	PPC_WARN_EMULATED(paste, regs);
+	rc = paste((void *)addr);
+
+	/* set cr0 to 0 to indicate a paste failure */
+	regs->ccr = (rc == -EFAULT) ? 0 : rc;
+
+	pagefault_enable();
+
+	return (rc == -EFAULT) ? rc : 0;
+}
+
 static int emulate_instruction(struct pt_regs *regs)
 {
 	u32 instword;
@@ -1164,6 +1232,10 @@ static int emulate_instruction(struct pt_regs *regs)
 
 	if (get_user(instword, (u32 __user *)(regs->nip)))
 		return -EFAULT;
+
+	/* Emulate the paste RA, RB. */
+	if ((instword & PPC_INST_PASTE_MASK) == PPC_INST_PASTE)
+		return emulate_paste(regs, instword);
 
 	/* Emulate the mfspr rD, PVR. */
 	if ((instword & PPC_INST_MFSPR_PVR_MASK) == PPC_INST_MFSPR_PVR) {
@@ -2088,6 +2160,7 @@ struct ppc_emulated ppc_emulated = {
 	WARN_EMULATED_SETUP(lxvh8x),
 	WARN_EMULATED_SETUP(lxvd2x),
 	WARN_EMULATED_SETUP(lxvb16x),
+	WARN_EMULATED_SETUP(paste),
 #endif
 };
 
