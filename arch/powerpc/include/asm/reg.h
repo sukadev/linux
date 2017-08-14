@@ -469,6 +469,8 @@
 #define SPRN_DBAT7U	0x23E	/* Data BAT 7 Upper Register */
 #define SPRN_PPR	0x380	/* SMT Thread status Register */
 #define SPRN_TSCR	0x399	/* Thread Switch Control Register */
+#define SPRN_TRIG1	0x371	/* WAT Trigger 1 */
+#define SPRN_TRIG2	0x372	/* WAT Trigger 2 */
 
 #define SPRN_DEC	0x016		/* Decrement Register */
 #define SPRN_DER	0x095		/* Debug Enable Register */

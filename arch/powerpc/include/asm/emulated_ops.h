@@ -59,6 +59,7 @@ extern struct ppc_emulated {
 	struct ppc_emulated_entry lxvh8x;
 	struct ppc_emulated_entry lxvd2x;
 	struct ppc_emulated_entry lxvb16x;
+	struct ppc_emulated_entry paste;
 #endif
 } ppc_emulated;
 

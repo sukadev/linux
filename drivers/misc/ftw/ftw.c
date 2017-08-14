@@ -226,7 +226,13 @@ static int ftw_mmap(struct file *fp, struct vm_area_struct *vma)
 	/* flags, page_prot from cxl_mmap(), except we want cachable */
 	vma->vm_flags |= VM_IO | VM_PFNMAP;
 	vma->vm_page_prot = pgprot_cached(vma->vm_page_prot);
-	prot = __pgprot(pgprot_val(vma->vm_page_prot);
+
+	/*
+	 * We must disable page faults when emulating the paste
+	 * instruction. To ensure that the page associated with
+	 * the paste address is in memory, mark it dirty.
+	 */
+	prot = __pgprot(pgprot_val(vma->vm_page_prot) | _PAGE_DIRTY);
 
 	rc = remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
 			vma->vm_end - vma->vm_start, prot);
