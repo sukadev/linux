@@ -20,6 +20,7 @@
  *	 Documentation/ioctl/ioctl-number.txt.
  */
 #define FTW_SETUP		_IOW('v', 0x20, struct ftw_setup_attr)
+#define VAS_842_TX_WIN_OPEN	_IOW('v', 0x21, struct ftw_setup_attr)
 
 struct ftw_setup_attr {
 	__s16	version;
