@@ -163,6 +163,55 @@ close_rxwin:
 	return rc;
 }
 
+/*
+ * Unsupported ioctl: we continue to use struct vas_ftw_setup_attr for
+ * 	this ioctl also.
+ */
+static int nxftw_ioc_842_tx_win_open(struct file *fp, unsigned long arg)
+{
+	int rc, vasid, cop;
+	struct vas_tx_win_attr txattr;
+	struct vas_ftw_setup_attr uattr;
+	void __user *uptr = (void *)arg;
+	struct vas_window *txwin;
+	struct nxftw_instance *nxti = fp->private_data;
+
+	rc = copy_from_user(&uattr, uptr, sizeof(uattr));
+	if (rc) {
+		pr_devel("%s(): copy_from_user() returns %d\n", __func__, rc);
+		return -EFAULT;
+	}
+
+	rc = validate_ftw_setup_attr(&uattr);
+	if (rc)
+		return rc;
+
+	cop = VAS_COP_TYPE_842;
+	vasid = uattr.vas_id;
+
+	vas_init_tx_win_attr(&txattr, cop);
+
+	txattr.lpid = mfspr(SPRN_LPID);
+	txattr.pidr = mfspr(SPRN_PID);
+	txattr.pid = task_pid_nr(current);
+	txattr.user_win = true;
+
+	pr_devel("Pid %d: Opening txwin, cop %d, PIDR %ld\n", txattr.pidr,
+				cop, mfspr(SPRN_PID));
+
+	txwin = vas_tx_win_open(vasid, cop, &txattr);
+	if (IS_ERR(txwin)) {
+		pr_devel("%s() vas_tx_win_open() failed, %ld\n", __func__,
+					PTR_ERR(txwin));
+		return PTR_ERR(txwin);
+	}
+
+	nxti->txwin = txwin;
+
+	return 0;
+}
+
+
 static int nxftw_release(struct inode *inode, struct file *fp)
 {
 	struct nxftw_instance *instance;
@@ -232,6 +281,9 @@ static long nxftw_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
 
 	case VAS_FTW_SETUP:
 		return nxftw_ioc_ftw_setup(fp, arg);
+
+	case VAS_842_TX_WIN_OPEN:
+		return nxftw_ioc_842_tx_win_open(fp, arg);
 
 	default:
 		return -EINVAL;

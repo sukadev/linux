@@ -16,6 +16,7 @@
 #define VAS_FLAGS_HIGH_PRI	0x2
 
 #define VAS_FTW_SETUP		_IOW('v', 1, struct vas_ftw_setup_attr)
+#define VAS_842_TX_WIN_OPEN	_IOW('v', 2, struct vas_ftw_setup_attr)
 
 struct vas_ftw_setup_attr {
 	int16_t		version;
