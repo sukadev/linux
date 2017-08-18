@@ -204,7 +204,8 @@
 #define OPAL_NPU_SPA_SETUP			159
 #define OPAL_NPU_SPA_CLEAR_CACHE		160
 #define OPAL_NPU_TL_SET				161
-#define OPAL_LAST				161
+#define OPAL_VAS_GET_TRIGGER_PORT		162
+#define OPAL_LAST				162
 
 /* Device tree flags */
 

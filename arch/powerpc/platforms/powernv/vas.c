@@ -23,7 +23,7 @@
 #include "vas.h"
 
 DEFINE_MUTEX(vas_mutex);
-static LIST_HEAD(vas_instances);
+LIST_HEAD(vas_instances);
 
 static DEFINE_PER_CPU(int, cpu_vas_id);
 
@@ -82,20 +82,37 @@ static int init_vas_instance(struct platform_device *pdev)
 			per_cpu(cpu_vas_id, cpu) = vasid;
 	}
 
+        rc = vas_setup_irq_mapping(vinst);
+        if (rc) {
+                /*
+                 * TODO: IRQ mapping is essential for user space send windows
+                 *       Should we prevent user space windows in this case?
+                 */
+                WARN_ON_ONCE(1);
+        }
+
 	mutex_lock(&vas_mutex);
 	list_add(&vinst->node, &vas_instances);
 	mutex_unlock(&vas_mutex);
 
 	vas_instance_init_dbgdir(vinst);
 
+	rc = vas_setup_fault_window(vinst);
+	if (rc) {
+		pr_devel("%s(): Error %d in fault window\n", __func__, rc);
+		goto free_irq_mapping;
+	}
+
 	dev_set_drvdata(&pdev->dev, vinst);
 
 	return 0;
 
+free_irq_mapping:
+	vas_free_irq_mapping(vinst);
+
 free_vinst:
 	kfree(vinst);
 	return -ENODEV;
-
 }
 
 /*
@@ -179,6 +196,8 @@ static int __init vas_init(void)
 		vas_cleanup_dbgdir();
 		return -ENODEV;
 	}
+
+	vas_setup_fault_handler();
 
 	pr_devel("Found %d instances\n", found);
 
