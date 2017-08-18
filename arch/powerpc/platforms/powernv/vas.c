@@ -26,7 +26,7 @@
  * vas_mutex protects both vas_instances and chip_to_vas_id_map.
  */
 static DEFINE_MUTEX(vas_mutex);
-static LIST_HEAD(vas_instances);
+LIST_HEAD(vas_instances);	// vas-fault.c needs this too
 
 /*
  * Create a mapping between a chip id and its VAS id(s). For POWER9, this
@@ -39,6 +39,22 @@ struct chip_to_vas_id {
 };
 
 static struct list_head chip_to_vas_id_map = LIST_HEAD_INIT(chip_to_vas_id_map);
+
+static void unmap_chip_id(int chip_id)
+{
+	struct list_head *l, *tmp;
+	struct chip_to_vas_id *c2v;
+
+	list_for_each_safe(l, tmp, &chip_to_vas_id_map) {
+		c2v = list_entry(l, struct chip_to_vas_id, list);
+		if (c2v->chip_id == chip_id) {
+			list_del(&c2v->list);
+			return;
+		}
+	}
+	pr_devel("%s() chip id %d not found!\n", __func__, chip_id);
+	WARN_ON_ONCE(1);
+}
 
 static int map_chip_id(int chip_id, int vasid)
 {
@@ -74,7 +90,6 @@ static int cpu_to_vas_id(int cpu)
 	WARN_ON_ONCE(1);
 	return 0;
 }
-
 
 static int init_vas_instance(struct platform_device *pdev)
 {
@@ -126,23 +141,46 @@ static int init_vas_instance(struct platform_device *pdev)
 			"paste_win_id_shift 0x%llx\n", pdev->name, vasid,
 			vinst->paste_base_addr, vinst->paste_win_id_shift);
 
+        rc = vas_setup_irq_mapping(vinst);
+        if (rc) {
+                /*
+                 * TODO: IRQ mapping is essential for user space send windows
+                 *       Should we prevent user space windows in this case?
+                 */
+                WARN_ON_ONCE(1);
+        }
+
 	mutex_lock(&vas_mutex);
 	rc = map_chip_id(of_get_ibm_chip_id(dn), vasid);
 	if (rc) {
 		mutex_unlock(&vas_mutex);
-		goto free_vinst;
+		goto free_irq_mapping;
 	}
 	list_add(&vinst->node, &vas_instances);
 	mutex_unlock(&vas_mutex);
+
+	rc = vas_setup_fault_window(vinst);
+	if (rc) {
+		pr_devel("%s(): Error %d in fault window\n", __func__, rc);
+		goto drop_vinst;
+	}
 
 	dev_set_drvdata(&pdev->dev, vinst);
 
 	return 0;
 
+drop_vinst:
+	mutex_lock(&vas_mutex);
+	list_del(&vinst->node);
+	unmap_chip_id(of_get_ibm_chip_id(dn));
+	mutex_unlock(&vas_mutex);
+
+free_irq_mapping:
+	vas_free_irq_mapping(vinst);
+
 free_vinst:
 	kfree(vinst);
 	return -ENODEV;
-
 }
 
 /*
@@ -204,6 +242,8 @@ static int __init vas_init(void)
 
 	if (!found)
 		return -ENODEV;
+
+	vas_setup_fault_handler();
 
 	pr_devel("Found %d instances\n", found);
 
