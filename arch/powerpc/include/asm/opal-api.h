@@ -190,7 +190,8 @@
 #define OPAL_NPU_INIT_CONTEXT			146
 #define OPAL_NPU_DESTROY_CONTEXT		147
 #define OPAL_NPU_MAP_LPAR			148
-#define OPAL_LAST				148
+#define OPAL_VAS_GET_TRIGGER_PORT		149
+#define OPAL_LAST				149
 
 /* Device tree flags */
 

@@ -112,6 +112,21 @@ struct data_descriptor_entry {
 	__be64 address;
 } __packed __aligned(DDE_ALIGN);
 
+/* 4.3.2 NX-stamped Fault CRB */
+
+#define NX_STAMP_ALIGN          (0x10)
+
+#define NX_STAMP_ACCESS_MASK    (0x01)
+#define NX_STAMP_ACCESS_READ    0
+#define NX_STAMP_ACCESS_WRITE   1
+
+struct nx_fault_stamp {
+        __be64 fault_storage_addr;
+        __be16 reserved;
+        __u8   flags;
+        __u8   fault_status;
+        __be32 pswid;
+} __packed __aligned(NX_STAMP_ALIGN);
 
 /* Chapter 6.5.2 Coprocessor-Request Block (CRB) */
 
@@ -139,10 +154,25 @@ struct coprocessor_request_block {
 
 	struct coprocessor_completion_block ccb;
 
-	u8 reserved[48];
+        union {
+                struct nx_fault_stamp nx;
+                u8 reserved[16];
+        } stamp;
+
+	u8 reserved[32];
 
 	struct coprocessor_status_block csb;
 } __packed __aligned(CRB_ALIGN);
+
+#define crb_csb_addr(c)		__be64_to_cpu(c->csb_addr)
+#define crb_nx_fault_addr(c)	__be64_to_cpu(c->stamp.nx.fault_storage_addr)
+#define crb_nx_flags(c)		c->stamp.nx.flags
+#define crb_nx_fault_status(c)	c->stamp.nx.fault_status
+
+static inline uint32_t crb_nx_pswid(struct coprocessor_request_block *crb)
+{
+	return __be32_to_cpu(crb->stamp.nx.pswid);
+}
 
 
 /* RFC02167 Initiate Coprocessor Instructions document

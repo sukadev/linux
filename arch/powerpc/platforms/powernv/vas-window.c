@@ -369,7 +369,7 @@ int init_winctx_regs(struct vas_window *window, struct vas_winctx *winctx)
 	init_xlate_regs(window, winctx->user_win);
 
 	val = 0ULL;
-	val = SET_FIELD(VAS_FAULT_TX_WIN, val, 0);
+	val = SET_FIELD(VAS_FAULT_TX_WIN, val, winctx->fault_win_id);
 	write_hvwc_reg(window, VREG(FAULT_TX_WIN), val);
 
 	/* In PowerNV, interrupts go to HV. */
@@ -609,7 +609,7 @@ static struct vas_window *get_user_rxwin(struct vas_instance *vinst, u32 pswid)
  *
  * See also function header of set_vinst_win().
  */
-static struct vas_window *get_vinst_rxwin(struct vas_instance *vinst,
+struct vas_window *get_vinst_rxwin(struct vas_instance *vinst,
 			enum vas_cop_type cop, u32 pswid)
 {
 	struct vas_window *rxwin;
@@ -753,6 +753,7 @@ static void init_winctx_for_rxwin(struct vas_window *rxwin,
 
 	winctx->min_scope = VAS_SCOPE_LOCAL;
 	winctx->max_scope = VAS_SCOPE_VECTORED_GROUP;
+	winctx->irq_port = rxwin->vinst->irq_port;
 }
 
 static bool rx_win_args_valid(enum vas_cop_type cop,
@@ -902,6 +903,10 @@ static void init_winctx_for_txwin(struct vas_window *txwin,
 			struct vas_tx_win_attr *txattr,
 			struct vas_winctx *winctx)
 {
+	struct vas_window *fault_win;
+
+	fault_win = get_vinst_rxwin(txwin->vinst, VAS_COP_TYPE_FAULT, 0);
+
 	/*
 	 * We first zero all fields and only set non-zero ones. Following
 	 * are some fields set to 0/false for the stated reason:
@@ -938,11 +943,13 @@ static void init_winctx_for_txwin(struct vas_window *txwin,
 	winctx->lpid = txattr->lpid;
 	winctx->pidr = txattr->pidr;
 	winctx->rx_win_id = txwin->rxwin->winid;
+	winctx->fault_win_id = fault_win->winid;
 
 	winctx->dma_type = VAS_DMA_TYPE_INJECT;
 	winctx->tc_mode = txattr->tc_mode;
 	winctx->min_scope = VAS_SCOPE_LOCAL;
 	winctx->max_scope = VAS_SCOPE_VECTORED_GROUP;
+	winctx->irq_port = txwin->vinst->irq_port;
 
 	winctx->pswid = 0;
 }
@@ -1168,6 +1175,22 @@ int vas_win_close(struct vas_window *window)
 }
 EXPORT_SYMBOL_GPL(vas_win_close);
 
+void vas_return_credit(struct vas_window *window, bool tx)
+{
+        uint64_t val;
+
+        val = 0ULL;
+        if (tx) {
+                val = SET_FIELD(VAS_TX_WCRED, val, 1);
+                write_hvwc_reg(window, VREG(TX_WCRED_ADDER), val);
+        } else {
+                val = SET_FIELD(VAS_LRX_WCRED, val, 1);
+                write_hvwc_reg(window, VREG(LRX_WCRED_ADDER), val);
+        }
+
+        return;
+}
+
 /*
  * Return a system-wide unique window id for the window @win.
  */
@@ -1176,3 +1199,42 @@ u32 vas_win_id(struct vas_window *win)
 	return encode_pswid(win->vinst->vas_id, win->winid);
 }
 EXPORT_SYMBOL_GPL(vas_win_id);
+
+struct vas_window *vas_pswid_to_window(struct vas_instance *vinst,
+                        uint32_t pswid)
+{
+        int winid;
+        struct vas_window *window;
+
+        if (!pswid) {
+                pr_err("Huh? PSWID  == 0?\n");
+                return NULL;
+        }
+
+        decode_pswid(pswid, NULL, &winid);
+
+        /*
+         * NOTE: If application closes the window before the hardware
+         *       returns the fault CRB, we should wait in vas_win_close()
+         *       for the pending requests. so the window must be active
+         *       and the process alive?
+         *
+         *       If its a kernel process, we should not get any faults and
+         *       should not get here.
+         */
+        if (winid >= VAS_WINDOWS_PER_CHIP)
+                return ERR_PTR(-ESRCH);
+
+        window = vinst->windows[winid];
+
+        /* Do some sanity checks on the decoded window */
+        if (!window->tx_win || !window->user_win || window->nx_win ||
+                        window->cop == VAS_COP_TYPE_FAULT) {
+                pr_err("PSWID decode: tx %d, user %d, nx %d, cop %d\n",
+                                window->tx_win, window->user_win,
+                                window->nx_win, window->cop);
+                WARN_ON(1);
+        }
+
+        return window;
+}
