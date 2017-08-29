@@ -18,11 +18,63 @@
 #include <linux/of_platform.h>
 #include <linux/of_address.h>
 #include <linux/of.h>
+#include <asm/prom.h>
 
 #include "vas.h"
 
+/*
+ * vas_mutex protects both vas_instances and chip_to_vas_id_map.
+ */
 static DEFINE_MUTEX(vas_mutex);
 static LIST_HEAD(vas_instances);
+
+/*
+ * Create a mapping between a chip id and its VAS id(s). For POWER9, this
+ * is a 1:1 to mapping. In the future, it may be a 1:N.
+ */
+struct chip_to_vas_id {
+	int chip_id;
+	int vas_id;
+	struct list_head list;
+};
+
+static struct list_head chip_to_vas_id_map = LIST_HEAD_INIT(chip_to_vas_id_map);
+
+static int map_chip_id(int chip_id, int vasid)
+{
+	struct chip_to_vas_id *c2v;
+
+	c2v = kmalloc(sizeof(*c2v), GFP_KERNEL);
+	if (!c2v)
+		return -ENOMEM;
+
+	INIT_LIST_HEAD(&c2v->list);
+	c2v->chip_id = chip_id;
+	c2v->vas_id = vasid;
+
+	list_add(&c2v->list, &chip_to_vas_id_map);
+
+	return 0;
+}
+
+static int cpu_to_vas_id(int cpu)
+{
+	int chip;
+	struct chip_to_vas_id *c2v;
+	struct list_head *l;
+
+	chip = cpu_to_chip_id(cpu);
+
+	list_for_each(l, &chip_to_vas_id_map) {
+		c2v = list_entry(l, struct chip_to_vas_id, list);
+		if (c2v->chip_id == chip)
+			return c2v->vas_id;
+	}
+
+	WARN_ON_ONCE(1);
+	return 0;
+}
+
 
 static int init_vas_instance(struct platform_device *pdev)
 {
@@ -75,6 +127,11 @@ static int init_vas_instance(struct platform_device *pdev)
 			vinst->paste_base_addr, vinst->paste_win_id_shift);
 
 	mutex_lock(&vas_mutex);
+	rc = map_chip_id(of_get_ibm_chip_id(dn), vasid);
+	if (rc) {
+		mutex_unlock(&vas_mutex);
+		goto free_vinst;
+	}
 	list_add(&vinst->node, &vas_instances);
 	mutex_unlock(&vas_mutex);
 
@@ -98,6 +155,10 @@ struct vas_instance *find_vas_instance(int vasid)
 	struct vas_instance *vinst;
 
 	mutex_lock(&vas_mutex);
+
+	if (vasid == -1)
+		vasid = cpu_to_vas_id(smp_processor_id());
+
 	list_for_each(ent, &vas_instances) {
 		vinst = list_entry(ent, struct vas_instance, node);
 		if (vinst->vas_id == vasid) {
