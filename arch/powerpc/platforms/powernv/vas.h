@@ -418,7 +418,12 @@ extern int vas_cleanup_fault_window(struct vas_instance *vinst);
 #define VREG_SFX(n, s)	__stringify(n), VAS_##n##s
 #define VREG(r)		VREG_SFX(r, _OFFSET)
 
-#ifdef vas_debug
+#ifndef vas_debug
+#undef pr_devel
+#undef pr_debug
+#define pr_devel       pr_err
+#define pr_debug       pr_err
+
 static inline void dump_rx_win_attr(struct vas_rx_win_attr *attr)
 {
 	pr_err("fault %d, notify %d, intr %d early %d\n",
