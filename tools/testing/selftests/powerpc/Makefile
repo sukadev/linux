@@ -19,6 +19,7 @@ SUB_DIRS = alignment		\
 	   copyloops		\
 	   context_switch	\
 	   dscr			\
+	   ftw			\
 	   mm			\
 	   pmu			\
 	   signal		\
