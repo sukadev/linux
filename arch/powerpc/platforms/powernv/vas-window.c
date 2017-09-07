@@ -1106,7 +1106,7 @@ retry:
 	if (busy) {
 		val = 0;
 		set_current_state(TASK_UNINTERRUPTIBLE);
-		schedule_timeout(HZ);
+		schedule_timeout(HZ/10);
 		goto retry;
 	}
 }
@@ -1127,7 +1127,7 @@ retry:
 		write_hvwc_reg(window, VREG(WIN_CTX_CACHING_CTL), val);
 
 		set_current_state(TASK_UNINTERRUPTIBLE);
-		schedule_timeout(HZ);
+		schedule_timeout(HZ/10);
 		goto retry;
 	}
 }
