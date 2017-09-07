@@ -1,0 +1,772 @@
+gcc -c -I ../../../../..//include -I ../../../../..//arch/powerpc/include -I ../../../../..//arch/powerpc/include/uapi -I ../../../../..//arch/powerpc/platforms/powernv user-nx-test1.c
+In file included from ../../../../..//arch/powerpc/include/uapi/asm/ptrace.h:27:0,
+                 from ../../../../..//arch/powerpc/include/asm/ptrace.h:26,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/types.h:14:26: error: conflicting types for ‘fd_set’
+ typedef __kernel_fd_set  fd_set;
+                          ^
+In file included from /usr/include/sys/types.h:219:0,
+                 from /usr/include/stdlib.h:314,
+                 from user-nx-test1.c:4:
+/usr/include/sys/select.h:75:5: note: previous declaration of ‘fd_set’ was here
+   } fd_set;
+     ^
+In file included from ../../../../..//arch/powerpc/include/uapi/asm/ptrace.h:27:0,
+                 from ../../../../..//arch/powerpc/include/asm/ptrace.h:26,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/types.h:15:25: error: conflicting types for ‘dev_t’
+ typedef __kernel_dev_t  dev_t;
+                         ^
+In file included from /usr/include/stdlib.h:314:0,
+                 from user-nx-test1.c:4:
+/usr/include/sys/types.h:60:17: note: previous declaration of ‘dev_t’ was here
+ typedef __dev_t dev_t;
+                 ^
+In file included from ../../../../..//arch/powerpc/include/uapi/asm/ptrace.h:27:0,
+                 from ../../../../..//arch/powerpc/include/asm/ptrace.h:26,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/types.h:19:17: error: conflicting types for ‘nlink_t’
+ typedef __u32   nlink_t;
+                 ^
+In file included from /usr/include/stdlib.h:314:0,
+                 from user-nx-test1.c:4:
+/usr/include/sys/types.h:75:19: note: previous declaration of ‘nlink_t’ was here
+ typedef __nlink_t nlink_t;
+                   ^
+In file included from ../../../../..//arch/powerpc/include/uapi/asm/ptrace.h:27:0,
+                 from ../../../../..//arch/powerpc/include/asm/ptrace.h:26,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/types.h:25:26: error: conflicting types for ‘timer_t’
+ typedef __kernel_timer_t timer_t;
+                          ^
+In file included from /usr/include/sys/types.h:132:0,
+                 from /usr/include/stdlib.h:314,
+                 from user-nx-test1.c:4:
+/usr/include/time.h:103:19: note: previous declaration of ‘timer_t’ was here
+ typedef __timer_t timer_t;
+                   ^
+In file included from ../../../../..//arch/powerpc/include/uapi/asm/ptrace.h:27:0,
+                 from ../../../../..//arch/powerpc/include/asm/ptrace.h:26,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/types.h:45:26: error: conflicting types for ‘loff_t’
+ typedef __kernel_loff_t  loff_t;
+                          ^
+In file included from /usr/include/stdlib.h:314:0,
+                 from user-nx-test1.c:4:
+/usr/include/sys/types.h:44:18: note: previous declaration of ‘loff_t’ was here
+ typedef __loff_t loff_t;
+                  ^
+In file included from ../../../../..//arch/powerpc/include/uapi/asm/ptrace.h:27:0,
+                 from ../../../../..//arch/powerpc/include/asm/ptrace.h:26,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/types.h:134:23: error: conflicting types for ‘blkcnt_t’
+ typedef unsigned long blkcnt_t;
+                       ^
+In file included from /usr/include/stdlib.h:314:0,
+                 from user-nx-test1.c:4:
+/usr/include/sys/types.h:235:20: note: previous declaration of ‘blkcnt_t’ was here
+ typedef __blkcnt_t blkcnt_t;  /* Type to count number of disk blocks.  */
+                    ^
+In file included from ../../../../..//arch/powerpc/include/uapi/asm/ptrace.h:27:0,
+                 from ../../../../..//arch/powerpc/include/asm/ptrace.h:26,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/types.h:154:1: error: unknown type name ‘u32’
+ typedef u32 dma_addr_t;
+ ^
+../../../../..//include/linux/types.h:163:1: error: unknown type name ‘u32’
+ typedef u32 phys_addr_t;
+ ^
+In file included from ../../../../..//include/linux/thread_info.h:11:0,
+                 from ../../../../..//arch/powerpc/include/asm/ptrace.h:158,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/bug.h:59:1: error: unknown type name ‘__must_check’
+ static inline __must_check bool check_data_corruption(bool v) { return v; }
+ ^
+../../../../..//include/linux/bug.h:59:33: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘check_data_corruption’
+ static inline __must_check bool check_data_corruption(bool v) { return v; }
+                                 ^
+In file included from ../../../../..//include/linux/thread_info.h:12:0,
+                 from ../../../../..//arch/powerpc/include/asm/ptrace.h:158,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/restart_block.h:30:4: error: unknown type name ‘u32’
+    u32 __user *uaddr;
+    ^
+../../../../..//include/linux/restart_block.h:31:4: error: unknown type name ‘u32’
+    u32 val;
+    ^
+../../../../..//include/linux/restart_block.h:32:4: error: unknown type name ‘u32’
+    u32 flags;
+    ^
+../../../../..//include/linux/restart_block.h:33:4: error: unknown type name ‘u32’
+    u32 bitset;
+    ^
+../../../../..//include/linux/restart_block.h:34:4: error: unknown type name ‘u64’
+    u64 time;
+    ^
+../../../../..//include/linux/restart_block.h:35:4: error: unknown type name ‘u32’
+    u32 __user *uaddr2;
+    ^
+../../../../..//include/linux/restart_block.h:47:4: error: unknown type name ‘u64’
+    u64 expires;
+    ^
+In file included from ../../../../..//include/linux/thread_info.h:24:0,
+                 from ../../../../..//arch/powerpc/include/asm/ptrace.h:158,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/bitops.h:218:37: error: unknown type name ‘u64’
+ static inline unsigned long __ffs64(u64 word)
+                                     ^
+In file included from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:11:0,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//arch/powerpc/include/asm/ptrace.h: In function ‘regs_within_kernel_stack’:
+../../../../..//arch/powerpc/include/asm/ptrace.h:192:20: error: ‘THREAD_SIZE’ undeclared (first use in this function)
+  return ((addr & ~(THREAD_SIZE - 1))  ==
+                    ^
+../../../../..//arch/powerpc/include/asm/ptrace.h:192:20: note: each undeclared identifier is reported only once for each function it appears in
+In file included from ../../../../..//include/linux/sem.h:4:0,
+                 from ../../../../..//include/linux/sched.h:14,
+                 from ../../../../..//arch/powerpc/include/asm/elf.h:12,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:13,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/atomic.h: At top level:
+../../../../..//include/linux/atomic.h:1046:49: error: unknown type name ‘atomic64_t’
+ static inline void atomic64_andnot(long long i, atomic64_t *v)
+                                                 ^
+../../../../..//include/linux/atomic.h:1051:60: error: unknown type name ‘atomic64_t’
+ static inline long long atomic64_fetch_andnot(long long i, atomic64_t *v)
+                                                            ^
+../../../../..//include/linux/atomic.h:1056:68: error: unknown type name ‘atomic64_t’
+ static inline long long atomic64_fetch_andnot_relaxed(long long i, atomic64_t *v)
+                                                                    ^
+../../../../..//include/linux/atomic.h:1061:68: error: unknown type name ‘atomic64_t’
+ static inline long long atomic64_fetch_andnot_acquire(long long i, atomic64_t *v)
+                                                                    ^
+../../../../..//include/linux/atomic.h:1066:68: error: unknown type name ‘atomic64_t’
+ static inline long long atomic64_fetch_andnot_release(long long i, atomic64_t *v)
+                                                                    ^
+In file included from ../../../../..//include/linux/kernel.h:11:0,
+                 from ../../../../..//include/linux/list.h:8,
+                 from ../../../../..//include/linux/preempt.h:10,
+                 from ../../../../..//include/linux/rcupdate.h:40,
+                 from ../../../../..//include/linux/sem.h:5,
+                 from ../../../../..//include/linux/sched.h:14,
+                 from ../../../../..//arch/powerpc/include/asm/elf.h:12,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:13,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/log2.h:26:17: error: unknown type name ‘u32’
+ int __ilog2_u32(u32 n)
+                 ^
+../../../../..//include/linux/log2.h:34:17: error: unknown type name ‘u64’
+ int __ilog2_u64(u64 n)
+                 ^
+In file included from ../../../../..//include/linux/kernel.h:13:0,
+                 from ../../../../..//include/linux/list.h:8,
+                 from ../../../../..//include/linux/preempt.h:10,
+                 from ../../../../..//include/linux/rcupdate.h:40,
+                 from ../../../../..//include/linux/sem.h:5,
+                 from ../../../../..//include/linux/sched.h:14,
+                 from ../../../../..//arch/powerpc/include/asm/elf.h:12,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:13,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/printk.h:145:24: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 2) __cold
+                        ^
+../../../../..//include/linux/printk.h:145:27: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 2) __cold
+                           ^
+../../../../..//include/linux/printk.h:210:24: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 0)
+                        ^
+../../../../..//include/linux/printk.h:210:27: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 0)
+                           ^
+../../../../..//include/linux/printk.h:215:24: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 2) __cold
+                        ^
+../../../../..//include/linux/printk.h:215:27: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 2) __cold
+                           ^
+../../../../..//include/linux/printk.h:220:24: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 2) __cold
+                        ^
+../../../../..//include/linux/printk.h:220:27: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 2) __cold
+                           ^
+../../../../..//include/linux/printk.h:244:1: error: unknown type name ‘u32’
+ static inline u32 log_buf_len_get(void)
+ ^
+../../../../..//include/linux/printk.h:257:24: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 2) void dump_stack_set_arch_desc(const char *fmt, ...)
+                        ^
+../../../../..//include/linux/printk.h:257:27: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 2) void dump_stack_set_arch_desc(const char *fmt, ...)
+                           ^
+In file included from ../../../../..//include/linux/byteorder/little_endian.h:6:0,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/byteorder.h:11,
+                 from ../../../../..//include/linux/kernel.h:15,
+                 from ../../../../..//include/linux/list.h:8,
+                 from ../../../../..//include/linux/preempt.h:10,
+                 from ../../../../..//include/linux/rcupdate.h:40,
+                 from ../../../../..//include/linux/sem.h:5,
+                 from ../../../../..//include/linux/sched.h:14,
+                 from ../../../../..//arch/powerpc/include/asm/elf.h:12,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:13,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/byteorder/generic.h:143:46: error: unknown type name ‘u16’
+ static inline void le16_add_cpu(__le16 *var, u16 val)
+                                              ^
+../../../../..//include/linux/byteorder/generic.h:148:46: error: unknown type name ‘u32’
+ static inline void le32_add_cpu(__le32 *var, u32 val)
+                                              ^
+../../../../..//include/linux/byteorder/generic.h:153:46: error: unknown type name ‘u64’
+ static inline void le64_add_cpu(__le64 *var, u64 val)
+                                              ^
+../../../../..//include/linux/byteorder/generic.h:158:46: error: unknown type name ‘u16’
+ static inline void be16_add_cpu(__be16 *var, u16 val)
+                                              ^
+../../../../..//include/linux/byteorder/generic.h:163:46: error: unknown type name ‘u32’
+ static inline void be32_add_cpu(__be32 *var, u32 val)
+                                              ^
+../../../../..//include/linux/byteorder/generic.h:168:46: error: unknown type name ‘u64’
+ static inline void be64_add_cpu(__be64 *var, u64 val)
+                                              ^
+In file included from ../../../../..//include/linux/list.h:8:0,
+                 from ../../../../..//include/linux/preempt.h:10,
+                 from ../../../../..//include/linux/rcupdate.h:40,
+                 from ../../../../..//include/linux/sem.h:5,
+                 from ../../../../..//include/linux/sched.h:14,
+                 from ../../../../..//arch/powerpc/include/asm/elf.h:12,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:13,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/kernel.h:255:1: error: unknown type name ‘u32’
+ static inline u32 reciprocal_scale(u32 val, u32 ep_ro)
+ ^
+../../../../..//include/linux/kernel.h:255:36: error: unknown type name ‘u32’
+ static inline u32 reciprocal_scale(u32 val, u32 ep_ro)
+                                    ^
+../../../../..//include/linux/kernel.h:255:45: error: unknown type name ‘u32’
+ static inline u32 reciprocal_scale(u32 val, u32 ep_ro)
+                                             ^
+../../../../..//include/linux/kernel.h:270:10: error: expected declaration specifiers or ‘...’ before numeric constant
+ __printf(1, 2)
+          ^
+../../../../..//include/linux/kernel.h:270:13: error: expected declaration specifiers or ‘...’ before numeric constant
+ __printf(1, 2)
+             ^
+../../../../..//include/linux/kernel.h: In function ‘do_exit’:
+../../../../..//include/linux/kernel.h:277:31: error: expected declaration specifiers before ‘__noreturn’
+ void do_exit(long error_code) __noreturn;
+                               ^
+../../../../..//include/linux/kernel.h:278:51: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘__noreturn’
+ void complete_and_exit(struct completion *, long) __noreturn;
+                                                   ^
+../../../../..//include/linux/kernel.h:281:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘_kstrtoul’
+ int __must_check _kstrtoul(const char *s, unsigned int base, unsigned long *res);
+                  ^
+../../../../..//include/linux/kernel.h:282:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘_kstrtol’
+ int __must_check _kstrtol(const char *s, unsigned int base, long *res);
+                  ^
+../../../../..//include/linux/kernel.h:284:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtoull’
+ int __must_check kstrtoull(const char *s, unsigned int base, unsigned long long *res);
+                  ^
+../../../../..//include/linux/kernel.h:285:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtoll’
+ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
+                  ^
+../../../../..//include/linux/kernel.h:303:32: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtoul’
+ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
+                                ^
+../../../../..//include/linux/kernel.h:332:32: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtol’
+ static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
+                                ^
+../../../../..//include/linux/kernel.h:345:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtouint’
+ int __must_check kstrtouint(const char *s, unsigned int base, unsigned int *res);
+                  ^
+../../../../..//include/linux/kernel.h:346:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtoint’
+ int __must_check kstrtoint(const char *s, unsigned int base, int *res);
+                  ^
+../../../../..//include/linux/kernel.h:348:32: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtou64’
+ static inline int __must_check kstrtou64(const char *s, unsigned int base, u64 *res)
+                                ^
+../../../../..//include/linux/kernel.h:353:32: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtos64’
+ static inline int __must_check kstrtos64(const char *s, unsigned int base, s64 *res)
+                                ^
+../../../../..//include/linux/kernel.h:358:32: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtou32’
+ static inline int __must_check kstrtou32(const char *s, unsigned int base, u32 *res)
+                                ^
+../../../../..//include/linux/kernel.h:363:32: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtos32’
+ static inline int __must_check kstrtos32(const char *s, unsigned int base, s32 *res)
+                                ^
+../../../../..//include/linux/kernel.h:368:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtou16’
+ int __must_check kstrtou16(const char *s, unsigned int base, u16 *res);
+                  ^
+../../../../..//include/linux/kernel.h:369:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtos16’
+ int __must_check kstrtos16(const char *s, unsigned int base, s16 *res);
+                  ^
+../../../../..//include/linux/kernel.h:370:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtou8’
+ int __must_check kstrtou8(const char *s, unsigned int base, u8 *res);
+                  ^
+../../../../..//include/linux/kernel.h:371:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtos8’
+ int __must_check kstrtos8(const char *s, unsigned int base, s8 *res);
+                  ^
+../../../../..//include/linux/kernel.h:372:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtobool’
+ int __must_check kstrtobool(const char *s, bool *res);
+                  ^
+../../../../..//include/linux/kernel.h:374:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtoull_from_user’
+ int __must_check kstrtoull_from_user(const char __user *s, size_t count, unsigned int base, unsigned long long *res);
+                  ^
+../../../../..//include/linux/kernel.h:375:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtoll_from_user’
+ int __must_check kstrtoll_from_user(const char __user *s, size_t count, unsigned int base, long long *res);
+                  ^
+../../../../..//include/linux/kernel.h:376:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtoul_from_user’
+ int __must_check kstrtoul_from_user(const char __user *s, size_t count, unsigned int base, unsigned long *res);
+                  ^
+../../../../..//include/linux/kernel.h:377:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtol_from_user’
+ int __must_check kstrtol_from_user(const char __user *s, size_t count, unsigned int base, long *res);
+                  ^
+../../../../..//include/linux/kernel.h:378:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtouint_from_user’
+ int __must_check kstrtouint_from_user(const char __user *s, size_t count, unsigned int base, unsigned int *res);
+                  ^
+../../../../..//include/linux/kernel.h:379:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtoint_from_user’
+ int __must_check kstrtoint_from_user(const char __user *s, size_t count, unsigned int base, int *res);
+                  ^
+../../../../..//include/linux/kernel.h:380:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtou16_from_user’
+ int __must_check kstrtou16_from_user(const char __user *s, size_t count, unsigned int base, u16 *res);
+                  ^
+../../../../..//include/linux/kernel.h:381:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtos16_from_user’
+ int __must_check kstrtos16_from_user(const char __user *s, size_t count, unsigned int base, s16 *res);
+                  ^
+../../../../..//include/linux/kernel.h:382:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtou8_from_user’
+ int __must_check kstrtou8_from_user(const char __user *s, size_t count, unsigned int base, u8 *res);
+                  ^
+../../../../..//include/linux/kernel.h:383:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtos8_from_user’
+ int __must_check kstrtos8_from_user(const char __user *s, size_t count, unsigned int base, s8 *res);
+                  ^
+../../../../..//include/linux/kernel.h:384:18: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtobool_from_user’
+ int __must_check kstrtobool_from_user(const char __user *s, size_t count, bool *res);
+                  ^
+../../../../..//include/linux/kernel.h:386:32: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtou64_from_user’
+ static inline int __must_check kstrtou64_from_user(const char __user *s, size_t count, unsigned int base, u64 *res)
+                                ^
+../../../../..//include/linux/kernel.h:391:32: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtos64_from_user’
+ static inline int __must_check kstrtos64_from_user(const char __user *s, size_t count, unsigned int base, s64 *res)
+                                ^
+../../../../..//include/linux/kernel.h:396:32: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtou32_from_user’
+ static inline int __must_check kstrtou32_from_user(const char __user *s, size_t count, unsigned int base, u32 *res)
+                                ^
+../../../../..//include/linux/kernel.h:401:32: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘kstrtos32_from_user’
+ static inline int __must_check kstrtos32_from_user(const char __user *s, size_t count, unsigned int base, s32 *res)
+                                ^
+../../../../..//include/linux/kernel.h:408:22: error: storage class specified for parameter ‘simple_strtoul’
+ extern unsigned long simple_strtoul(const char *,char **,unsigned int);
+                      ^
+../../../../..//include/linux/kernel.h:409:13: error: storage class specified for parameter ‘simple_strtol’
+ extern long simple_strtol(const char *,char **,unsigned int);
+             ^
+../../../../..//include/linux/kernel.h:410:27: error: storage class specified for parameter ‘simple_strtoull’
+ extern unsigned long long simple_strtoull(const char *,char **,unsigned int);
+                           ^
+../../../../..//include/linux/kernel.h:411:18: error: storage class specified for parameter ‘simple_strtoll’
+ extern long long simple_strtoll(const char *,char **,unsigned int);
+                  ^
+../../../../..//include/linux/kernel.h:413:12: error: storage class specified for parameter ‘num_to_str’
+ extern int num_to_str(char *buf, int size, unsigned long long num);
+            ^
+../../../../..//include/linux/kernel.h:417:17: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(2, 3) int sprintf(char *buf, const char * fmt, ...);
+                 ^
+../../../../..//include/linux/kernel.h:417:20: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(2, 3) int sprintf(char *buf, const char * fmt, ...);
+                    ^
+../../../../..//include/linux/kernel.h:418:17: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(2, 0) int vsprintf(char *buf, const char *, va_list);
+                 ^
+../../../../..//include/linux/kernel.h:418:20: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(2, 0) int vsprintf(char *buf, const char *, va_list);
+                    ^
+../../../../..//include/linux/kernel.h:419:17: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(3, 4)
+                 ^
+../../../../..//include/linux/kernel.h:419:20: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(3, 4)
+                    ^
+../../../../..//include/linux/kernel.h:421:17: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(3, 0)
+                 ^
+../../../../..//include/linux/kernel.h:421:20: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(3, 0)
+                    ^
+../../../../..//include/linux/kernel.h:423:17: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(3, 4)
+                 ^
+../../../../..//include/linux/kernel.h:423:20: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(3, 4)
+                    ^
+../../../../..//include/linux/kernel.h:425:17: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(3, 0)
+                 ^
+../../../../..//include/linux/kernel.h:425:20: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(3, 0)
+                    ^
+../../../../..//include/linux/kernel.h:427:17: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(2, 3) __malloc
+                 ^
+../../../../..//include/linux/kernel.h:427:20: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(2, 3) __malloc
+                    ^
+../../../../..//include/linux/kernel.h:429:17: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(2, 0) __malloc
+                 ^
+../../../../..//include/linux/kernel.h:429:20: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(2, 0) __malloc
+                    ^
+../../../../..//include/linux/kernel.h:431:17: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(2, 0)
+                 ^
+../../../../..//include/linux/kernel.h:431:20: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __printf(2, 0)
+                    ^
+../../../../..//include/linux/kernel.h:434:16: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __scanf(2, 3)
+                ^
+../../../../..//include/linux/kernel.h:434:19: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __scanf(2, 3)
+                   ^
+../../../../..//include/linux/kernel.h:436:16: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __scanf(2, 0)
+                ^
+../../../../..//include/linux/kernel.h:436:19: error: expected declaration specifiers or ‘...’ before numeric constant
+ extern __scanf(2, 0)
+                   ^
+../../../../..//include/linux/kernel.h:439:12: error: storage class specified for parameter ‘get_option’
+ extern int get_option(char **str, int *pint);
+            ^
+../../../../..//include/linux/kernel.h:440:14: error: storage class specified for parameter ‘get_options’
+ extern char *get_options(const char *str, int nints, int *ints);
+              ^
+../../../../..//include/linux/kernel.h:441:27: error: storage class specified for parameter ‘memparse’
+ extern unsigned long long memparse(const char *ptr, char **retptr);
+                           ^
+../../../../..//include/linux/kernel.h:442:13: error: storage class specified for parameter ‘parse_option_str’
+ extern bool parse_option_str(const char *str, const char *option);
+             ^
+../../../../..//include/linux/kernel.h:443:14: error: storage class specified for parameter ‘next_arg’
+ extern char *next_arg(char *args, char **param, char **val);
+              ^
+../../../../..//include/linux/kernel.h:445:12: error: storage class specified for parameter ‘core_kernel_text’
+ extern int core_kernel_text(unsigned long addr);
+            ^
+../../../../..//include/linux/kernel.h:446:12: error: storage class specified for parameter ‘core_kernel_data’
+ extern int core_kernel_data(unsigned long addr);
+            ^
+../../../../..//include/linux/kernel.h:447:12: error: storage class specified for parameter ‘__kernel_text_address’
+ extern int __kernel_text_address(unsigned long addr);
+            ^
+../../../../..//include/linux/kernel.h:448:12: error: storage class specified for parameter ‘kernel_text_address’
+ extern int kernel_text_address(unsigned long addr);
+            ^
+../../../../..//include/linux/kernel.h:449:12: error: storage class specified for parameter ‘func_ptr_is_kernel_text’
+ extern int func_ptr_is_kernel_text(void *ptr);
+            ^
+../../../../..//include/linux/kernel.h:453:13: error: storage class specified for parameter ‘bust_spinlocks’
+ extern void bust_spinlocks(int yes);
+             ^
+../../../../..//include/linux/kernel.h:454:12: error: storage class specified for parameter ‘oops_in_progress’
+ extern int oops_in_progress;  /* If set, an oops, panic(), BUG() or die() is in progress */
+            ^
+../../../../..//include/linux/kernel.h:455:12: error: storage class specified for parameter ‘panic_timeout’
+ extern int panic_timeout;
+            ^
+../../../../..//include/linux/kernel.h:456:12: error: storage class specified for parameter ‘panic_on_oops’
+ extern int panic_on_oops;
+            ^
+../../../../..//include/linux/kernel.h:457:12: error: storage class specified for parameter ‘panic_on_unrecovered_nmi’
+ extern int panic_on_unrecovered_nmi;
+            ^
+../../../../..//include/linux/kernel.h:458:12: error: storage class specified for parameter ‘panic_on_io_nmi’
+ extern int panic_on_io_nmi;
+            ^
+../../../../..//include/linux/kernel.h:459:12: error: storage class specified for parameter ‘panic_on_warn’
+ extern int panic_on_warn;
+            ^
+../../../../..//include/linux/kernel.h:460:12: error: storage class specified for parameter ‘sysctl_panic_on_rcu_stall’
+ extern int sysctl_panic_on_rcu_stall;
+            ^
+../../../../..//include/linux/kernel.h:461:12: error: storage class specified for parameter ‘sysctl_panic_on_stackoverflow’
+ extern int sysctl_panic_on_stackoverflow;
+            ^
+../../../../..//include/linux/kernel.h:463:13: error: storage class specified for parameter ‘crash_kexec_post_notifiers’
+ extern bool crash_kexec_post_notifiers;
+             ^
+../../../../..//include/linux/kernel.h:470:17: error: storage class specified for parameter ‘panic_cpu’
+ extern atomic_t panic_cpu;
+                 ^
+../../../../..//include/linux/kernel.h:478:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/kernel.h:482:20: error: storage class specified for parameter ‘print_tainted’
+ extern const char *print_tainted(void);
+                    ^
+../../../../..//include/linux/kernel.h:487:13: error: storage class specified for parameter ‘add_taint’
+ extern void add_taint(unsigned flag, enum lockdep_ok);
+             ^
+../../../../..//include/linux/kernel.h:488:12: error: storage class specified for parameter ‘test_taint’
+ extern int test_taint(unsigned flag);
+            ^
+../../../../..//include/linux/kernel.h:489:22: error: storage class specified for parameter ‘get_taint’
+ extern unsigned long get_taint(void);
+                      ^
+../../../../..//include/linux/kernel.h:490:12: error: storage class specified for parameter ‘root_mountflags’
+ extern int root_mountflags;
+            ^
+../../../../..//include/linux/kernel.h:492:13: error: storage class specified for parameter ‘early_boot_irqs_disabled’
+ extern bool early_boot_irqs_disabled;
+             ^
+../../../../..//include/linux/kernel.h:505:3: error: storage class specified for parameter ‘system_state’
+ } system_state;
+   ^
+../../../../..//include/linux/kernel.h:531:32: error: storage class specified for parameter ‘taint_flags’
+ extern const struct taint_flag taint_flags[TAINT_FLAGS_COUNT];
+                                ^
+../../../../..//include/linux/kernel.h:533:19: error: storage class specified for parameter ‘hex_asc’
+ extern const char hex_asc[];
+                   ^
+../../../../..//include/linux/kernel.h:537:46: error: unknown type name ‘u8’
+ static inline char *hex_byte_pack(char *buf, u8 byte)
+                                              ^
+../../../../..//include/linux/kernel.h:544:19: error: storage class specified for parameter ‘hex_asc_upper’
+ extern const char hex_asc_upper[];
+                   ^
+../../../../..//include/linux/kernel.h:548:52: error: unknown type name ‘u8’
+ static inline char *hex_byte_pack_upper(char *buf, u8 byte)
+                                                    ^
+../../../../..//include/linux/kernel.h:555:12: error: storage class specified for parameter ‘hex_to_bin’
+ extern int hex_to_bin(char ch);
+            ^
+../../../../..//include/linux/kernel.h:556:25: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘hex2bin’
+ extern int __must_check hex2bin(u8 *dst, const char *src, size_t count);
+                         ^
+../../../../..//include/linux/kernel.h:557:14: error: storage class specified for parameter ‘bin2hex’
+ extern char *bin2hex(char *dst, const void *src, size_t count);
+              ^
+../../../../..//include/linux/kernel.h:559:30: error: unknown type name ‘u8’
+ bool mac_pton(const char *s, u8 *mac);
+                              ^
+../../../../..//include/linux/kernel.h:731:40: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ static inline void tracing_start(void) { }
+                                        ^
+../../../../..//include/linux/kernel.h:732:39: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ static inline void tracing_stop(void) { }
+                                       ^
+../../../../..//include/linux/kernel.h:733:47: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ static inline void trace_dump_stack(int skip) { }
+                                               ^
+../../../../..//include/linux/kernel.h:735:37: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ static inline void tracing_on(void) { }
+                                     ^
+../../../../..//include/linux/kernel.h:736:38: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ static inline void tracing_off(void) { }
+                                      ^
+../../../../..//include/linux/kernel.h:737:39: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ static inline int tracing_is_on(void) { return 0; }
+                                       ^
+../../../../..//include/linux/kernel.h:738:43: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ static inline void tracing_snapshot(void) { }
+                                           ^
+../../../../..//include/linux/kernel.h:739:49: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ static inline void tracing_snapshot_alloc(void) { }
+                                                 ^
+../../../../..//include/linux/kernel.h:741:24: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 2)
+                        ^
+../../../../..//include/linux/kernel.h:741:27: error: expected declaration specifiers or ‘...’ before numeric constant
+ static inline __printf(1, 2)
+                           ^
+../../../../..//include/linux/kernel.h:746:17: error: expected declaration specifiers or ‘...’ before numeric constant
+ static __printf(1, 0) inline int
+                 ^
+../../../../..//include/linux/kernel.h:746:20: error: expected declaration specifiers or ‘...’ before numeric constant
+ static __printf(1, 0) inline int
+                    ^
+../../../../..//include/linux/kernel.h:751:70: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
+                                                                      ^
+In file included from ../../../../..//include/linux/preempt.h:10:0,
+                 from ../../../../..//include/linux/rcupdate.h:40,
+                 from ../../../../..//include/linux/sem.h:5,
+                 from ../../../../..//include/linux/sched.h:14,
+                 from ../../../../..//arch/powerpc/include/asm/elf.h:12,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:13,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/list.h:26:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:40:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:44:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:58:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:77:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:91:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:103:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:115:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:123:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:138:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:147:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:157:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:168:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:180:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:192:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:201:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:219:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:229:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:243:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:249:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:275:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:290:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:308:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:320:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:334:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:351:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:628:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:634:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:639:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:644:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:654:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:661:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:669:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:681:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:690:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:701:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:706:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:716:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+../../../../..//include/linux/list.h:726:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
+ {
+ ^
+In file included from ../../../../..//include/linux/rcupdate.h:40:0,
+                 from ../../../../..//include/linux/sem.h:5,
+                 from ../../../../..//include/linux/sched.h:14,
+                 from ../../../../..//arch/powerpc/include/asm/elf.h:12,
+                 from ../../../../..//arch/powerpc/include/uapi/asm/sigcontext.h:13,
+                 from /usr/include/bits/sigcontext.h:27,
+                 from /usr/include/signal.h:340,
+                 from user-nx-test1.c:6:
+../../../../..//include/linux/preempt.h:80:25: fatal error: asm/preempt.h: No such file or directory
+ #include <asm/preempt.h>
+                         ^
+compilation terminated.
+make: *** [user-nx-test1.o] Error 1
