@@ -26,14 +26,33 @@
 #include <sys/types.h>
 #include <sys/shm.h>
 #include <linux/futex.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
+#include <fcntl.h>
 #ifdef __powerpc__
 #include <altivec.h>
 #endif
 #include "utils.h"
 
+/*
+ * Copied from arch/powerpc/include/uapi/asm/nx-ftw.h
+ */
+#define VAS_FTW_SETUP           _IOW('v', 1, struct vas_ftw_setup_attr)
+struct vas_ftw_setup_attr {
+	int16_t		version;
+	int16_t		vas_id;
+	uint32_t	reserved;
+
+	int64_t		reserved1;
+
+	int64_t		flags;
+	int64_t		reserved2;
+};
+
 static unsigned int timeout = 30;
 
 static int touch_vdso;
+static int vas;
 struct timeval tv;
 
 static int touch_fp = 1;
@@ -217,10 +236,40 @@ static void yield_setup(int cpu1, int cpu2)
 	}
 }
 
+static void use_vas(void)
+{
+	struct vas_ftw_setup_attr ftwattr;
+	int fd;
+	void *addr;
+
+	fd = open("/dev/crypto/nx-ftw", O_RDWR);
+	if (fd < 0) {
+		perror("open");
+		exit(1);
+	}
+
+	memset(&ftwattr, 0, sizeof(ftwattr));
+	ftwattr.version = 1;
+	ftwattr.vas_id = -1;
+	if (ioctl(fd, VAS_FTW_SETUP, &ftwattr) < 0) {
+		perror("VAS_FTW_SETUP");
+		exit(1);
+	}
+
+	addr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0ULL);
+	if (addr == MAP_FAILED) {
+		perror("mmap()");
+		exit(1);
+	}
+}
+
 static void *yield_thread1(void *arg)
 {
 	signal(SIGALRM, sigalrm_handler);
 	alarm(1);
+
+	if (vas > 0)
+		use_vas();
 
 	while (1) {
 		sched_yield();
@@ -234,6 +283,9 @@ static void *yield_thread1(void *arg)
 
 static void *yield_thread2(void *arg)
 {
+	if (vas > 1)
+		use_vas();
+
 	while (1) {
 		sched_yield();
 		touch();
@@ -384,6 +436,7 @@ static struct option options[] = {
 	{ "timeout", required_argument, 0, 's' },
 	{ "vdso", no_argument, &touch_vdso, 1 },
 	{ "no-fp", no_argument, &touch_fp, 0 },
+	{ "vas", required_argument, 0, 'v' },
 #ifdef __powerpc__
 	{ "no-altivec", no_argument, &touch_altivec, 0 },
 #endif
@@ -399,6 +452,7 @@ static void usage(void)
 	fprintf(stderr, "\t\t--timeout=X\tDuration in seconds to run (default 30)\n");
 	fprintf(stderr, "\t\t--vdso\t\ttouch VDSO\n");
 	fprintf(stderr, "\t\t--no-fp\t\tDon't touch FP\n");
+	fprintf(stderr, "\t\t--vas=N\t\t Use VAS in 0, 1 or 2 threads\n");
 #ifdef __powerpc__
 	fprintf(stderr, "\t\t--no-altivec\tDon't touch altivec\n");
 #endif
@@ -447,6 +501,10 @@ int main(int argc, char *argv[])
 			timeout = atoi(optarg);
 			break;
 
+		case 'v':
+			vas = atoi(optarg);
+			break;
+
 		default:
 			usage();
 			exit(1);
@@ -473,6 +531,8 @@ int main(int argc, char *argv[])
 		printf("yield");
 	else
 		printf("futex");
+
+	printf(" vas=%d", vas);
 
 	printf(" on cpus %d/%d touching FP:%s altivec:%s vector:%s vdso:%s\n",
 	       cpu1, cpu2, touch_fp ?  "yes" : "no", touch_altivec ? "yes" : "no",
