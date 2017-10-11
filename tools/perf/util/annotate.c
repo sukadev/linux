@@ -1652,7 +1652,7 @@ static int annotation__calc_percent(struct annotation *notes,
 	return 0;
 }
 
-static int symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel)
+int symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel)
 {
 	struct annotation *notes = symbol__annotation(sym);
 

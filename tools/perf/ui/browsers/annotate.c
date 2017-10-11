@@ -438,15 +438,12 @@ static void annotate_browser__set_rb_top(struct annotate_browser *browser,
 	browser->curr_hot = nd;
 }
 
-static void annotate_browser__calc_percent(struct annotate_browser *browser,
-					   struct perf_evsel *evsel)
+static void annotate_browser__calc_percent(struct annotate_browser *browser)
 {
 	struct map_symbol *ms = browser->b.priv;
 	struct symbol *sym = ms->sym;
 	struct annotation *notes = symbol__annotation(sym);
-	struct annotation_line *next;
 	struct disasm_line *pos;
-	s64 len = symbol__size(sym);
 
 	browser->entries = RB_ROOT;
 
@@ -454,7 +451,6 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
 
 	list_for_each_entry(pos, &notes->src->source, al.node) {
 		struct browser_disasm_line *bpos = disasm_line__browser(pos);
-		const char *path = NULL;
 		double max_percent = 0.0;
 		int i;
 
@@ -463,17 +459,11 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
 			continue;
 		}
 
-		next = annotation_line__next(&pos->al, &notes->src->source);
-
 		for (i = 0; i < browser->nr_events; i++) {
-			struct sym_hist_entry sample;
+			struct annotation_data *sample = &pos->al.samples[i];
 
-			bpos->samples[i].percent = disasm__calc_percent(notes,
-						evsel->idx + i,
-						pos->al.offset,
-						next ? next->offset : len,
-						&path, &sample);
-			bpos->samples[i].he = sample;
+			bpos->samples[i].percent = sample->percent;
+			bpos->samples[i].he      = sample->he;
 
 			if (max_percent < bpos->samples[i].percent)
 				max_percent = bpos->samples[i].percent;
@@ -781,7 +771,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
 	if (ui_browser__show(&browser->b, title, help) < 0)
 		return -1;
 
-	annotate_browser__calc_percent(browser, evsel);
+	annotate_browser__calc_percent(browser);
 
 	if (browser->curr_hot) {
 		annotate_browser__set_rb_top(browser, browser->curr_hot);
@@ -794,7 +784,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
 		key = ui_browser__run(&browser->b, delay_secs);
 
 		if (delay_secs != 0) {
-			annotate_browser__calc_percent(browser, evsel);
+			annotate_browser__calc_percent(browser);
 			/*
 			 * Current line focus got out of the list of most active
 			 * lines, NULL it so that if TAB|UNTAB is pressed, we
