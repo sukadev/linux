@@ -21,6 +21,9 @@
 #include <asm/vas.h>
 #include <uapi/misc/ftw.h>
 
+#define CREATE_TRACE_POINTS
+#include "ftw-trace.h"
+
 /*
  * FTW is a device driver used to provide user space access to the
  * Core-to-Core aka Fast Thread Wakeup (FTW) functionality provided by
@@ -80,6 +83,8 @@ static int ftw_open(struct inode *inode, struct file *fp)
 	instance->id = atomic_inc_return(&ftw_instid);
 
 	fp->private_data = instance;
+
+	trace_ftw_open_event(current, instance->id);
 
 	return 0;
 }
@@ -234,6 +239,7 @@ static int ftw_mmap(struct file *fp, struct vm_area_struct *vma)
 
 	pr_devel("paste addr %llx at %lx, rc %d\n", paste_addr, vma->vm_start,
 			rc);
+	trace_ftw_mmap_event(current, instance->id, paste_addr, vma->vm_start);
 
 	set_thread_uses_vas();
 
