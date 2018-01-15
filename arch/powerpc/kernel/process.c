@@ -1475,6 +1475,7 @@ int set_thread_uses_vas(void)
 #endif /* CONFIG_PPC_BOOK3S_64 */
 	return 0;
 }
+EXPORT_SYMBOL_GPL(set_thread_uses_vas);
 
 #ifdef CONFIG_PPC64
 static DEFINE_SPINLOCK(vas_thread_id_lock);
