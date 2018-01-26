@@ -1,0 +1,52 @@
+
+Use this module to test NX-842 and other compression algorithms.
+
+Build:
+
+You can build this selftest into the kernel or as a module.
+
+For distro testing, build this as an external module:
+
+	mkdir ~/comp_selftest
+
+	cp linux.git/crypto/comp_seltest/comp_selftest.c ~/comp_selftest/
+
+	cd ~/comp_selftest
+
+	cat > Makefile << _EOF
+
+	obj-m := comp_selftest.o
+
+	_EOF
+
+	# Install distro kernel headers, say
+	#
+	#	kernel-headers4.14.0-21.el7a.ppc64le
+
+	make -C /usr/src/kernels/4.14.0-21.el7a.ppc64le/ M=$PWD
+
+Test:
+
+	# Load module (unless built into kernel)
+	insmod comp_selftest.ko
+
+	# Load compression algorithm
+	echo 842-nx > /sys/kernel/debug/comp_selftest/compressor
+
+	# Run the test once. Check dmesg for output
+	echo 1 > /sys/kernel/debug/comp_selftest/running
+
+	# Run test continuously until stopped.
+	echo 1 > /sys/kernel/debug/comp_selftest/repeat
+	echo 1 > /sys/kernel/debug/comp_selftest/running
+
+	# Increase number of threads (even while test is running)
+	echo 16 > /sys/kernel/debug/comp_selftest/threads
+
+	# Check status (even while test is running)
+	cat /sys/kernel/debug/comp_selftest/status
+
+	# Stop test
+	echo 0 > /sys/kernel/debug/comp_selftest/running
+
+	# Check dmesg/console for output
