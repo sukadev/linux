@@ -207,3 +207,8 @@ void vas_init_dbgdir(void)
 	if (IS_ERR(vas_debugfs))
 		vas_debugfs = NULL;
 }
+
+void vas_cleanup_dbgdir(void)
+{
+	debugfs_remove_recursive(vas_debugfs);
+}

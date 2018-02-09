@@ -169,8 +169,11 @@ static int __init vas_init(void)
 		found++;
 	}
 
-	if (!found)
+	if (!found) {
+		platform_driver_unregister(&vas_driver);
+		vas_cleanup_dbgdir();
 		return -ENODEV;
+	}
 
 	pr_devel("Found %d instances\n", found);
 
