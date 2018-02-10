@@ -125,6 +125,11 @@ struct vas_instance *find_vas_instance(int vasid)
 	return NULL;
 }
 
+bool vas_configured(void)
+{
+	return !list_empty(&vas_instances);
+}
+
 int chip_to_vas_id(int chipid)
 {
 	int cpu;

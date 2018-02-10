@@ -106,6 +106,11 @@ struct vas_tx_win_attr {
 };
 
 /*
+ * Return true if VAS is configured on this system.
+ */
+bool vas_configured(void);
+
+/*
  * Helper to map a chip id to VAS id.
  * For POWER9, this is a 1:1 mapping. In the future this maybe a 1:N
  * mapping in which case, we will need to update this helper.
